@@ -47,7 +47,7 @@ function getBaseUpdate() {
   return -1;
 }
 
-// Returns { me, others, bullets }
+// Returns { me , others , parts , blocks }
 export function getCurrentState() {
   if (!firstServerTimestamp) {
     return {};
@@ -66,8 +66,9 @@ export function getCurrentState() {
     const ratio = (serverTime - baseUpdate.t) / (next.t - baseUpdate.t);
     return {
       me: interpolateObject(baseUpdate.me, next.me, ratio),
-      others: interpolateObjectArray(baseUpdate.others, next.others, ratio),
-      bullets: interpolateObjectArray(baseUpdate.bullets, next.bullets, ratio),
+      others: interpolateObjectArray(baseUpdate.houses, next.houses, ratio),
+      parts: interpolateObjectArray(baseUpdate.parts, next.parts, ratio),
+      blocks: interpolateObjectArray(baseUpdate.blocks, next.blocks, ratio),
     };
   }
 }
