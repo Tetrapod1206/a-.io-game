@@ -66,7 +66,7 @@ export function getCurrentState() {
     const ratio = (serverTime - baseUpdate.t) / (next.t - baseUpdate.t);
     return {
       me: interpolateObject(baseUpdate.me, next.me, ratio),
-      others: interpolateObjectArray(baseUpdate.houses, next.houses, ratio),
+      others: interpolateObjectArray(baseUpdate.others, next.others, ratio),
       parts: interpolateObjectArray(baseUpdate.parts, next.parts, ratio),
       blocks: interpolateObjectArray(baseUpdate.blocks, next.blocks, ratio),
     };
