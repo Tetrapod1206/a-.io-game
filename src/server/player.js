@@ -1,13 +1,14 @@
+// Done Modification. jc-hiroto 07/23 21:30.
 const ObjectClass = require('./object');
 const Bullet = require('./bullet');
 const Constants = require('../shared/constants');
 
 class Player extends ObjectClass {
   constructor(id, username, x, y) {
-    super(id, x, y, Math.random() * 2 * Math.PI, Constants.PLAYER_SPEED);
+    super(id, x, y, Math.random() * 2 * Math.PI, Constants.PLAYER_INIT_SPEED);
     this.username = username;
-    this.hp = Constants.PLAYER_MAX_HP;
-    this.fireCooldown = 0;
+    this.size = Constants.PLAYER_INIT_SIZE;
+    this.boostCooldown = 0;
     this.score = 0;
   }
 
@@ -23,28 +24,30 @@ class Player extends ObjectClass {
     this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y));
 
     // Fire a bullet, if needed
-    this.fireCooldown -= dt;
-    if (this.fireCooldown <= 0) {
-      this.fireCooldown += Constants.PLAYER_FIRE_COOLDOWN;
+    this.boostCooldown -= dt;
+    if (this.boostCooldown <= 0) {
+      this.boostCooldown += Constants.PLAYER_BOOST_COOLDOWN;
+      // speed boost code here.
       return new Bullet(this.id, this.x, this.y, this.direction);
     }
 
     return null;
   }
 
-  takeBulletDamage() {
-    this.hp -= Constants.BULLET_DAMAGE;
+  getHitbyOthers() {
+    this.size -= Constants.HIT_DAMAGE;
   }
 
-  onDealtDamage() {
-    this.score += Constants.SCORE_BULLET_HIT;
+  onSuckNewPart() {
+    this.size += Constants.SUCK_ADDITION;
+    this.score += Constants.SCORE_SUCK;
   }
 
   serializeForUpdate() {
     return {
       ...(super.serializeForUpdate()),
       direction: this.direction,
-      hp: this.hp,
+      size: this.size,
     };
   }
 }

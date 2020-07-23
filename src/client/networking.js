@@ -38,3 +38,7 @@ export const play = username => {
 export const updateDirection = throttle(20, dir => {
   socket.emit(Constants.MSG_TYPES.INPUT, dir);
 });
+
+export function triggerBoost(){
+  socket.emit(Constants.MSG_TYPES.TRIG_BOOST);
+}

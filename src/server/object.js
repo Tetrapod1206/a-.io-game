@@ -22,6 +22,10 @@ class Object {
     this.direction = dir;
   }
 
+  setSpeed(s){
+    this.speed = s;
+  }
+
   serializeForUpdate() {
     return {
       id: this.id,

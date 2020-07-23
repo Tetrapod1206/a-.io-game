@@ -1,14 +1,15 @@
 module.exports = Object.freeze({
   PLAYER_RADIUS: 20,
-  PLAYER_MAX_HP: 100,
-  PLAYER_SPEED: 400,
-  PLAYER_FIRE_COOLDOWN: 0.25,
+  PLAYER_INIT_SIZE: 50,
+  PLAYER_INIT_SPEED: 200,
+  PLAYER_BOOST_COOLDOWN: 0.25,
+  PLAYER_BOOST_AMOUNT: 50,
 
+  SUCK_ADDITION: 10,
+  HIT_DAMAGE: 10,
   BULLET_RADIUS: 3,
-  BULLET_SPEED: 800,
-  BULLET_DAMAGE: 10,
 
-  SCORE_BULLET_HIT: 20,
+  SCORE_SUCK: 20,
   SCORE_PER_SECOND: 1,
 
   MAP_SIZE: 3000,
@@ -17,5 +18,6 @@ module.exports = Object.freeze({
     GAME_UPDATE: 'update',
     INPUT: 'input',
     GAME_OVER: 'dead',
+    TRIG_BOOST: 'trigger boost',
   },
 });

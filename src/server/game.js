@@ -6,7 +6,7 @@ class Game {
   constructor() {
     this.sockets = {};
     this.players = {};
-    this.bullets = [];
+    this.parts = [];
     this.lastUpdateTime = Date.now();
     this.shouldSendUpdate = false;
     setInterval(this.update.bind(this), 1000 / 60);
@@ -14,7 +14,6 @@ class Game {
 
   addPlayer(socket, username) {
     this.sockets[socket.id] = socket;
-
     // Generate a position to start this player at.
     const x = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5);
     const y = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5);
@@ -31,6 +30,11 @@ class Game {
       this.players[socket.id].setDirection(dir);
     }
   }
+  handleBoost(socket){
+    if (this.players[socket.id]) {
+      this.players[socket.id].setSpeed(500);
+    }
+  }
 
   update() {
     // Calculate time elapsed
@@ -38,33 +42,33 @@ class Game {
     const dt = (now - this.lastUpdateTime) / 1000;
     this.lastUpdateTime = now;
 
-    // Update each bullet
-    const bulletsToRemove = [];
-    this.bullets.forEach(bullet => {
-      if (bullet.update(dt)) {
-        // Destroy this bullet
-        bulletsToRemove.push(bullet);
+    // Update each part
+    const partsToRemove = [];
+    this.parts.forEach(part => {
+      if (part.update(dt)) {
+        // Destroy this part
+        partsToRemove.push(part);
       }
     });
-    this.bullets = this.bullets.filter(bullet => !bulletsToRemove.includes(bullet));
+    this.parts = this.parts.filter(part => !partsToRemove.includes(part));
 
     // Update each player
     Object.keys(this.sockets).forEach(playerID => {
       const player = this.players[playerID];
       const newBullet = player.update(dt);
       if (newBullet) {
-        this.bullets.push(newBullet);
+        this.parts.push(newBullet);
       }
     });
 
-    // Apply collisions, give players score for hitting bullets
-    const destroyedBullets = applyCollisions(Object.values(this.players), this.bullets);
+    // Apply collisions, give players score for hitting parts
+    const destroyedBullets = applyCollisions(Object.values(this.players), this.parts);
     destroyedBullets.forEach(b => {
       if (this.players[b.parentID]) {
         this.players[b.parentID].onDealtDamage();
       }
     });
-    this.bullets = this.bullets.filter(bullet => !destroyedBullets.includes(bullet));
+    this.parts = this.parts.filter(part => !destroyedBullets.includes(part));
 
     // Check if any players are dead
     Object.keys(this.sockets).forEach(playerID => {
@@ -101,15 +105,14 @@ class Game {
     const nearbyPlayers = Object.values(this.players).filter(
       p => p !== player && p.distanceTo(player) <= Constants.MAP_SIZE / 2,
     );
-    const nearbyBullets = this.bullets.filter(
+    const nearbyBullets = this.parts.filter(
       b => b.distanceTo(player) <= Constants.MAP_SIZE / 2,
     );
-
     return {
       t: Date.now(),
       me: player.serializeForUpdate(),
-      others: nearbyPlayers.map(p => p.serializeForUpdate()),
-      bullets: nearbyBullets.map(b => b.serializeForUpdate()),
+      others: nearbyPlayers.map(o => o.serializeForUpdate()),
+      parts: nearbyBullets.map(p => p.serializeForUpdate()),
       leaderboard,
     };
   }

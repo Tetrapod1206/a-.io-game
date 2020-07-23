@@ -24,7 +24,7 @@ function setCanvasDimensions() {
 window.addEventListener('resize', debounce(40, setCanvasDimensions));
 
 function render() {
-  const { me, others, bullets } = getCurrentState();
+  const { me, others, parts } = getCurrentState();
   if (!me) {
     return;
   }
@@ -38,7 +38,7 @@ function render() {
   context.strokeRect(canvas.width / 2 - me.x, canvas.height / 2 - me.y, MAP_SIZE, MAP_SIZE);
 
   // Draw all bullets
-  bullets.forEach(renderBullet.bind(null, me));
+  //bullets.forEach(renderBullet.bind(null, me));
 
   // Draw all players
   renderPlayer(me, me);
@@ -64,24 +64,24 @@ function renderBackground(x, y) {
 
 // Renders a ship at the given coordinates
 function renderPlayer(me, player) {
-  const { x, y, direction } = player;
+  const { x, y, direction,size} = player;
   const canvasX = canvas.width / 2 + x - me.x;
   const canvasY = canvas.height / 2 + y - me.y;
-
   // Draw ship
   context.save();
   context.translate(canvasX, canvasY);
   context.rotate(direction);
   context.drawImage(
     getAsset('car.svg'),
-    -PLAYER_RADIUS,
-    -PLAYER_RADIUS,
-    PLAYER_RADIUS * 2,
-    PLAYER_RADIUS * 2,
+    -size/2,
+    -size/2,
+    size,
+    size,
   );
   context.restore();
 
-  // Draw health bar
+  // Draw health bar, but we dont need hp bar so sad.
+  /*
   context.fillStyle = 'white';
   context.fillRect(
     canvasX - PLAYER_RADIUS,
@@ -96,6 +96,7 @@ function renderPlayer(me, player) {
     PLAYER_RADIUS * 2 * (1 - player.hp / PLAYER_MAX_HP),
     2,
   );
+  */
 }
 
 function renderBullet(me, bullet) {
