@@ -1,4 +1,5 @@
 const Constants = require('../shared/constants');
+const shortid = require('shortid');
 const Player = require('./player');
 const Part = require('./part');
 const applyCollisions = require('./collisions');
@@ -11,6 +12,16 @@ class Game {
     this.lastUpdateTime = Date.now();
     this.shouldSendUpdate = false;
     setInterval(this.update.bind(this), 1000 / 60);
+    this.generateParts();
+  }
+
+  generateParts(){
+    var randAmount = Math.floor(Math.random()*50)+10;
+    for(var i = 0; i<randAmount; i++){
+      var generatedPart = new Part("generator",Math.floor(Math.random()*2900)+50 , Math.floor(Math.random()*2900)+50, 0);
+      this.parts.push(generatedPart);
+      console.log(generatedPart);
+    }
   }
 
   addPlayer(socket, username) {
@@ -32,11 +43,10 @@ class Game {
     }
   }
   handleBoost(socket){
-    if (this.players[socket.id] && this.players[socket.id].size > Constants.PLAYER_INIT_SIZE) {
+    if (this.players[socket.id] && this.players[socket.id].size >= (Constants.PLAYER_INIT_SIZE +Constants.DROP_DECREASE)) {
       this.players[socket.id].toggleBoost();
       var player = this.players[socket.id];
       const newPart = new Part(player.id, player.x+Constants.BULLET_RADIUS+player.size+10, player.y+Constants.BULLET_RADIUS+player.size+10, player.direction);
-      console.log(newPart);
       this.parts.push(newPart);
     }
   }

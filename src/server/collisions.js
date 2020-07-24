@@ -14,7 +14,6 @@ function applyCollisions(players, bullets) {
       ) {
         destroyedBullets.push(part);
         player.onSuckNewPart();
-        console.log('EAT');
         break;
       }
     }

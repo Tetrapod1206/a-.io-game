@@ -40,7 +40,7 @@ class Player extends ObjectClass {
       this.boostStartTime = Date.now();
       this.originalSpeed = this.speed;
       this.setSpeed(this.speed * Constants.PLAYER_BOOST_RATIO);
-      this.size -= Constants.SCORE_SUCK;
+      this.size -= Constants.DROP_DECREASE;
     }
   }
   boostHandler(){
