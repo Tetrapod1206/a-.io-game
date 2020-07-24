@@ -33,7 +33,7 @@ function render() {
   renderBackground(me.x, me.y);
 
   // Draw boundaries
-  context.strokeStyle = 'grey';
+  context.strokeStyle = 'black';
   context.lineWidth = 1;
   context.strokeRect(canvas.width / 2 - me.x, canvas.height / 2 - me.y, MAP_SIZE, MAP_SIZE);
 
@@ -87,10 +87,10 @@ function renderPlayer(me, player) {
   context.rotate(direction);
   context.drawImage(
     getAsset('car_new.svg'),
-    -size/2,
-    -size/2,
-    size,
-    size,
+    -size,
+    -size,
+    size*2,
+    size*2,
   );
   context.restore();
   // Draw boost duration bar.

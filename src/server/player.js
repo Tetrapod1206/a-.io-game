@@ -41,7 +41,9 @@ class Player extends ObjectClass {
       this.originalSpeed = this.speed;
       this.setSpeed(this.speed * Constants.PLAYER_BOOST_RATIO);
       this.size -= Constants.DROP_DECREASE;
+      return true;
     }
+    return false;
   }
   boostHandler(){
     if(this.isDuringBoost){

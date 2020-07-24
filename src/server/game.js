@@ -51,12 +51,17 @@ class Game {
   }
   handleBoost(socket){
     if (this.players[socket.id] && this.players[socket.id].size >= (Constants.PLAYER_INIT_SIZE +Constants.DROP_DECREASE)) {
-      this.players[socket.id].toggleBoost();
       var player = this.players[socket.id];
-      const newPart = new Part(player.id, player.x+(Constants.BULLET_RADIUS+player.size+10)*Math.sin(player.direction+Math.PI), player.y+(Constants.BULLET_RADIUS+player.size+10)*Math.cos(player.direction+Math.PI), player.direction);
-      console.log(newPart);
-      console.log(player);  
-      this.parts.push(newPart);
+      var tempX = player.x;
+      var tempY = player.y;
+      var tempDir = player.direction;
+      var boostCheck = this.players[socket.id].toggleBoost();
+      if(boostCheck){
+        const newPart = new Part(player.id, tempX+(Constants.BULLET_RADIUS+player.size+20)*Math.sin(tempDir+Math.PI), tempY+(Constants.BULLET_RADIUS+player.size+20)*Math.cos(tempDir+Math.PI), player.direction);
+        console.log(newPart);
+        console.log(player);
+        this.parts.push(newPart);
+      }
     }
   }
 
