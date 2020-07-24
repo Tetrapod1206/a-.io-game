@@ -64,7 +64,7 @@ function renderBackground(x, y) {
 
 // Renders a ship at the given coordinates
 function renderPlayer(me, player) {
-  const { x, y, direction,size} = player;
+  const { x, y, direction,size,leftBoost} = player;
   const canvasX = canvas.width / 2 + x - me.x;
   const canvasY = canvas.height / 2 + y - me.y;
   // Draw ship
@@ -79,24 +79,23 @@ function renderPlayer(me, player) {
     size,
   );
   context.restore();
-
-  // Draw health bar, but we dont need hp bar so sad.
-  /*
-  context.fillStyle = 'white';
-  context.fillRect(
-    canvasX - PLAYER_RADIUS,
-    canvasY + PLAYER_RADIUS + 8,
-    PLAYER_RADIUS * 2,
-    2,
-  );
-  context.fillStyle = 'red';
-  context.fillRect(
-    canvasX - PLAYER_RADIUS + PLAYER_RADIUS * 2 * player.hp / PLAYER_MAX_HP,
-    canvasY + PLAYER_RADIUS + 8,
-    PLAYER_RADIUS * 2 * (1 - player.hp / PLAYER_MAX_HP),
-    2,
-  );
-  */
+  // Draw boost duration bar.
+  if(leftBoost != 0){
+    context.fillStyle = 'grey';
+    context.fillRect(
+      canvasX - size,
+      canvasY - size - 4,
+      size*2,
+      2,
+    );
+    context.fillStyle = 'white';
+    context.fillRect(
+      canvasX - size,
+      canvasY - size - 4,
+      size*2  * leftBoost/100,
+      2,
+    );
+  }
 }
 
 function renderBullet(me, bullet) {

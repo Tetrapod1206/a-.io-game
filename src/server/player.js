@@ -55,19 +55,29 @@ class Player extends ObjectClass {
   }
   boostHandler(){
     if(this.isDuringBoost){
-      console.log(Date.now() - this.boostStartTime);
       if(Date.now() - this.boostStartTime > Constants.PLAYER_BOOST_DURATION){
         this.boostStartTime = 0;
         this.isDuringBoost = false;
-        this.setSpeed(this.originalSpeed);
+        for(var i = this.originalSpeed*Constants.PLAYER_BOOST_RATIO;i>this.originalSpeed;i--){
+          this.setSpeed(this.originalSpeed);
+        }
       }
     }
   }
   serializeForUpdate() {
+    var leftPercent = 0;
+    if(this.isDuringBoost){
+      leftPercent = ((Constants.PLAYER_BOOST_DURATION - (Date.now() - this.boostStartTime))/Constants.PLAYER_BOOST_DURATION)*100;
+    }
+    else{
+      leftPercent = 0;
+    }
+
     return {
       ...(super.serializeForUpdate()),
       direction: this.direction,
       size: this.size,
+      leftBoost: leftPercent,
     };
   }
 }
