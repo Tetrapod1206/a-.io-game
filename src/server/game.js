@@ -32,7 +32,7 @@ class Game {
   }
   handleBoost(socket){
     if (this.players[socket.id]) {
-      this.players[socket.id].setSpeed(500);
+      this.players[socket.id].toggleBoost();
     }
   }
 

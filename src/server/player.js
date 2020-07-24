@@ -10,12 +10,15 @@ class Player extends ObjectClass {
     this.size = Constants.PLAYER_INIT_SIZE;
     this.boostCooldown = 0;
     this.score = 0;
+    this.boostStartTime = 0;
+    this.originalSpeed = 0;
+    this.isDuringBoost = false;
   }
 
   // Returns a newly created bullet, or null.
   update(dt) {
     super.update(dt);
-
+    this.boostHandler();
     // Update score
     this.score += dt * Constants.SCORE_PER_SECOND;
 
@@ -42,7 +45,24 @@ class Player extends ObjectClass {
     this.size += Constants.SUCK_ADDITION;
     this.score += Constants.SCORE_SUCK;
   }
-
+  toggleBoost(){
+    if(!this.isDuringBoost){
+      this.isDuringBoost = true;
+      this.boostStartTime = Date.now();
+      this.originalSpeed = this.speed;
+      this.setSpeed(this.speed * Constants.PLAYER_BOOST_RATIO);
+    }
+  }
+  boostHandler(){
+    if(this.isDuringBoost){
+      console.log(Date.now() - this.boostStartTime);
+      if(Date.now() - this.boostStartTime > Constants.PLAYER_BOOST_DURATION){
+        this.boostStartTime = 0;
+        this.isDuringBoost = false;
+        this.setSpeed(this.originalSpeed);
+      }
+    }
+  }
   serializeForUpdate() {
     return {
       ...(super.serializeForUpdate()),
