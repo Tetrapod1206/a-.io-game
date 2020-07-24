@@ -11,16 +11,23 @@ class Game {
     this.parts = [];
     this.lastUpdateTime = Date.now();
     this.shouldSendUpdate = false;
+    this.randGenTimestamp = Date.now();
     setInterval(this.update.bind(this), 1000 / 60);
-    this.generateParts();
+    this.initParts();
   }
 
-  generateParts(){
-    var randAmount = Math.floor(Math.random()*50)+10;
+  initParts(){
+    var randAmount = Math.floor(Math.random()*30)+30;
     for(var i = 0; i<randAmount; i++){
+      var generatedPart = new Part("init",Math.floor(Math.random()*2900)+50 , Math.floor(Math.random()*2900)+50, 0);
+      this.parts.push(generatedPart);
+    }
+  }
+  randGenParts(){
+    if(Date.now() - this.randGenTimestamp > Constants.PART_GEN_CD && this.parts.length <= Constants.PART_AMOUNT_MAX){
+      this.randGenTimestamp = Date.now();
       var generatedPart = new Part("generator",Math.floor(Math.random()*2900)+50 , Math.floor(Math.random()*2900)+50, 0);
       this.parts.push(generatedPart);
-      console.log(generatedPart);
     }
   }
 
@@ -54,6 +61,7 @@ class Game {
   }
 
   update() {
+    this.randGenParts();
     // Calculate time elapsed
     const now = Date.now();
     const dt = (now - this.lastUpdateTime) / 1000;

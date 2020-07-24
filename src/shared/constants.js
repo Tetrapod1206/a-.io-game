@@ -15,6 +15,9 @@ module.exports = Object.freeze({
   SCORE_SUCK: 5,
   SCORE_PER_SECOND: 1,
 
+  PART_GEN_CD: 5000,
+  PART_AMOUNT_MAX: 60,
+
   MAP_SIZE: 3000,
   MSG_TYPES: {
     JOIN_GAME: 'join_game',
