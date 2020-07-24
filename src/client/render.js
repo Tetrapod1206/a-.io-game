@@ -33,7 +33,7 @@ function render() {
   renderBackground(me.x, me.y);
 
   // Draw boundaries
-  context.strokeStyle = 'black';
+  context.strokeStyle = 'grey';
   context.lineWidth = 1;
   context.strokeRect(canvas.width / 2 - me.x, canvas.height / 2 - me.y, MAP_SIZE, MAP_SIZE);
 
@@ -44,6 +44,20 @@ function render() {
   renderPlayer(me, me);
   others.forEach(renderPlayer.bind(null, me));
 }
+/*
+function renderBackground(x,y){
+    context.fillStyle = "white";
+    context.backgroundColor = 'grey';
+    context.beginPath();
+    for (var x = 0, i = 0; i < 150; x+=21, i++) {
+        for (var y = 0, j=0; j < 150; y+=21, j++) {
+            context.rect (x, y, 20, 20);
+        }
+    }
+    context.fill();
+    context.closePath();
+}
+*/
 
 function renderBackground(x, y) {
   const backgroundX = MAP_SIZE / 2 - x + canvas.width / 2;
