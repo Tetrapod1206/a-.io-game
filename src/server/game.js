@@ -46,7 +46,9 @@ class Game {
     if (this.players[socket.id] && this.players[socket.id].size >= (Constants.PLAYER_INIT_SIZE +Constants.DROP_DECREASE)) {
       this.players[socket.id].toggleBoost();
       var player = this.players[socket.id];
-      const newPart = new Part(player.id, player.x+Constants.BULLET_RADIUS+player.size+10, player.y+Constants.BULLET_RADIUS+player.size+10, player.direction);
+      const newPart = new Part(player.id, player.x+(Constants.BULLET_RADIUS+player.size+10)*Math.sin(player.direction+Math.PI), player.y+(Constants.BULLET_RADIUS+player.size+10)*Math.cos(player.direction+Math.PI), player.direction);
+      console.log(newPart);
+      console.log(player);  
       this.parts.push(newPart);
     }
   }
@@ -66,6 +68,7 @@ class Game {
       }
     });
     this.parts = this.parts.filter(part => !partsToRemove.includes(part));
+
 
     // Update each player
     Object.keys(this.sockets).forEach(playerID => {
