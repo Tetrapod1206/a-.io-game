@@ -51,7 +51,6 @@ function handleInput(dir) {
 
 function triggerBoost(){
   game.handleBoost(this);
-  console.log('time to boost');
 }
 
 function onDisconnect() {

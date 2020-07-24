@@ -10,11 +10,11 @@ function applyCollisions(players, bullets) {
       const part = bullets[i];
       const player = players[j];
       if (
-        part.parentID !== player.id &&
-        player.distanceTo(part) <= Constants.PLAYER_RADIUS + Constants.BULLET_RADIUS
+        player.distanceTo(part) <= player.size + Constants.BULLET_RADIUS
       ) {
         destroyedBullets.push(part);
         player.onSuckNewPart();
+        console.log('EAT');
         break;
       }
     }

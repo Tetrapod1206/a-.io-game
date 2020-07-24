@@ -38,7 +38,7 @@ function render() {
   context.strokeRect(canvas.width / 2 - me.x, canvas.height / 2 - me.y, MAP_SIZE, MAP_SIZE);
 
   // Draw all bullets
-  //bullets.forEach(renderBullet.bind(null, me));
+  parts.forEach(renderPart.bind(null, me));
 
   // Draw all players
   renderPlayer(me, me);
@@ -72,7 +72,7 @@ function renderPlayer(me, player) {
   context.translate(canvasX, canvasY);
   context.rotate(direction);
   context.drawImage(
-    getAsset('car.svg'),
+    getAsset('car_new.svg'),
     -size/2,
     -size/2,
     size,
@@ -98,10 +98,10 @@ function renderPlayer(me, player) {
   }
 }
 
-function renderBullet(me, bullet) {
+function renderPart(me, bullet) {
   const { x, y } = bullet;
   context.drawImage(
-    getAsset('bullet.svg'),
+    getAsset('part.svg'),
     canvas.width / 2 + x - me.x - BULLET_RADIUS,
     canvas.height / 2 + y - me.y - BULLET_RADIUS,
     BULLET_RADIUS * 2,

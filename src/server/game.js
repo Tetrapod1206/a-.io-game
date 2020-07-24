@@ -1,5 +1,6 @@
 const Constants = require('../shared/constants');
 const Player = require('./player');
+const Part = require('./part');
 const applyCollisions = require('./collisions');
 
 class Game {
@@ -31,8 +32,12 @@ class Game {
     }
   }
   handleBoost(socket){
-    if (this.players[socket.id]) {
+    if (this.players[socket.id] && this.players[socket.id].size > Constants.PLAYER_INIT_SIZE) {
       this.players[socket.id].toggleBoost();
+      var player = this.players[socket.id];
+      const newPart = new Part(player.id, player.x+Constants.BULLET_RADIUS+player.size+10, player.y+Constants.BULLET_RADIUS+player.size+10, player.direction);
+      console.log(newPart);
+      this.parts.push(newPart);
     }
   }
 
@@ -55,17 +60,14 @@ class Game {
     // Update each player
     Object.keys(this.sockets).forEach(playerID => {
       const player = this.players[playerID];
-      const newBullet = player.update(dt);
-      if (newBullet) {
-        this.parts.push(newBullet);
-      }
+      player.update(dt);
     });
 
     // Apply collisions, give players score for hitting parts
     const destroyedBullets = applyCollisions(Object.values(this.players), this.parts);
     destroyedBullets.forEach(b => {
       if (this.players[b.parentID]) {
-        this.players[b.parentID].onDealtDamage();
+        this.players[b.parentID].onSuckNewPart();
       }
     });
     this.parts = this.parts.filter(part => !destroyedBullets.includes(part));

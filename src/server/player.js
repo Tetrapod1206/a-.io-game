@@ -9,7 +9,7 @@ class Player extends ObjectClass {
     this.username = username;
     this.size = Constants.PLAYER_INIT_SIZE;
     this.boostCooldown = 0;
-    this.score = 0;
+    this.score = this.size - Constants.PLAYER_INIT_SIZE;
     this.boostStartTime = 0;
     this.originalSpeed = 0;
     this.isDuringBoost = false;
@@ -20,21 +20,11 @@ class Player extends ObjectClass {
     super.update(dt);
     this.boostHandler();
     // Update score
-    this.score += dt * Constants.SCORE_PER_SECOND;
+    this.score = this.size - Constants.PLAYER_INIT_SIZE;
 
     // Make sure the player stays in bounds
     this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x));
     this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y));
-
-    // Fire a bullet, if needed
-    this.boostCooldown -= dt;
-    if (this.boostCooldown <= 0) {
-      this.boostCooldown += Constants.PLAYER_BOOST_COOLDOWN;
-      // speed boost code here.
-      return new Bullet(this.id, this.x, this.y, this.direction);
-    }
-
-    return null;
   }
 
   getHitbyOthers() {
@@ -43,7 +33,6 @@ class Player extends ObjectClass {
 
   onSuckNewPart() {
     this.size += Constants.SUCK_ADDITION;
-    this.score += Constants.SCORE_SUCK;
   }
   toggleBoost(){
     if(!this.isDuringBoost){
@@ -51,6 +40,7 @@ class Player extends ObjectClass {
       this.boostStartTime = Date.now();
       this.originalSpeed = this.speed;
       this.setSpeed(this.speed * Constants.PLAYER_BOOST_RATIO);
+      this.size -= Constants.SCORE_SUCK;
     }
   }
   boostHandler(){
