@@ -105,7 +105,7 @@ class Player extends ObjectClass {
         }
         else{
 
-          //this.setDirection(this.direction+ (1-progress));
+          this.setDirection(this.direction+ (1-progress)*0.5);
         }
       }
     }
