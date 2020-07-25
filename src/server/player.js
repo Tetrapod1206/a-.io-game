@@ -15,7 +15,7 @@ class Player extends ObjectClass {
     this.vxdt = 0;
     this.vydt = 0;
     this.dt = 0;
-    this.originalSpeed = 0;
+    this.originalSpeed = Constants.PLAYER_INIT_SPEED;
     this.originalDir = 0;
     this.isDuringBoost = false;
     this.isDuringLostControl = false;
@@ -48,7 +48,6 @@ class Player extends ObjectClass {
     if(!this.isDuringBoost){
       this.isDuringBoost = true;
       this.boostStartTime = Date.now();
-      this.originalSpeed = this.speed;
       this.setSpeed(this.speed * Constants.PLAYER_BOOST_RATIO);
       this.size -= Constants.DROP_DECREASE;
       return true;
@@ -72,10 +71,11 @@ class Player extends ObjectClass {
     console.log(this.vxdt);
     console.log(this.vydt);
     this.isDuringLostControl = true;
+    this.isDuringBoost = false;
     this.lostControlStartTime = Date.now();
-    this.originalSpeed = this.speed;
     this.originalDir = this.direction;
     this.setSpeed(0);
+
     //this.setDirection(dir);
   }
   lostControlHandler(){
@@ -85,8 +85,17 @@ class Player extends ObjectClass {
         console.log('lostEND');
         this.lostControlStartTime = 0;
         this.isDuringLostControl = false;
-        for(var i = this.speed;i<this.originalSpeed;i++){
-          this.setSpeed(i);
+        if(this.speed <= this.originalSpeed){
+          for(var i = this.speed;i<this.originalSpeed;i++){
+            this.setSpeed(i);
+          }
+        }
+        else{
+          if(this.speed > this.originalSpeed){
+            for(var i = this.speed;i<this.originalSpeed;i--){
+              this.setSpeed(i);
+            }
+          }
         }
         this.setDirection(this.originalDir);
       }
