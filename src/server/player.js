@@ -12,6 +12,9 @@ class Player extends ObjectClass {
     this.score = this.size - Constants.PLAYER_INIT_SIZE;
     this.boostStartTime = 0;
     this.lostControlStartTime = 0;
+    this.vxdt = 0;
+    this.vydt = 0;
+    this.dt = 0;
     this.originalSpeed = 0;
     this.originalDir = 0;
     this.isDuringBoost = false;
@@ -20,8 +23,9 @@ class Player extends ObjectClass {
   }
 
   // Returns a newly created bullet, or null.
-  update(dt) {
-    super.update(dt);
+  update(delta) {
+    this.dt = delta;
+    super.update(delta);
     this.boostHandler();
     this.lostControlHandler();
     // Update score
@@ -63,27 +67,41 @@ class Player extends ObjectClass {
     }
   }
   collisionHandler(speed,dir){
-    console.log(speed);
-    console.log(dir);
-    this.isDuringBoost = true;
+    this.vxdt = speed*Math.sin(dir);
+    this.vydt = speed*Math.cos(dir);
+    console.log(this.vxdt);
+    console.log(this.vydt);
+    this.isDuringLostControl = true;
     this.lostControlStartTime = Date.now();
     this.originalSpeed = this.speed;
     this.originalDir = this.direction;
-    this.setSpeed(speed);
-    this.setDirection(dir);
+    this.setSpeed(0);
+    //this.setDirection(dir);
   }
   lostControlHandler(){
+    var progress = (Date.now() - this.lostControlStartTime)/Constants.PLAYER_LOST_CONTROL_DURATION;
     if(this.isDuringLostControl){
-      if(Date.now() - this.lostControlStartTime > Constants.PLAYER_LOST_CONTROL_DURATION){
+      if(Date.now() - this.lostControlStartTime >= Constants.PLAYER_LOST_CONTROL_DURATION){
+        console.log('lostEND');
         this.lostControlStartTime = 0;
         this.isDuringLostControl = false;
-        for(var i = this.speed;i>this.originalSpeed;i--){
+        for(var i = this.speed;i<this.originalSpeed;i++){
           this.setSpeed(i);
         }
         this.setDirection(this.originalDir);
       }
-    }
+      else{
+        this.setX(this.x + this.vxdt * (1-progress)*this.dt);
+        this.setY(this.y + this.vydt * (1-progress)*this.dt);
+        if(this.direction >= 2*Math.PI){
+          this.setDirection(0);
+        }
+        else{
 
+          //this.setDirection(this.direction+ (1-progress));
+        }
+      }
+    }
   }
   serializeForUpdate() {
     var leftPercent = 0;

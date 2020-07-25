@@ -10,8 +10,7 @@ function applyCollisions(players, bullets) {
       const part = bullets[i];
       const player = players[j];
       if (
-        player.distanceTo(part) <= player.size + Constants.BULLET_RADIUS - player.size/4
-      ) {
+        player.distanceTo(part) <= player.size + Constants.BULLET_RADIUS - player.size/4) {
         destroyedBullets.push(part);
         player.onSuckNewPart();
         break;
@@ -29,9 +28,6 @@ function applyPlayerCollisions(players){
       if (
         playerI.distanceTo(playerJ) <= playerI.size + playerJ.size
       ) {
-        console.log("contact!");
-        console.log(playerI);
-        console.log(playerJ);
         collisionComp(playerI,playerJ);
 
       }
@@ -46,7 +42,7 @@ function collisionComp(playerI , playerJ){
     playerI.collisionHandler(Math.sqrt(Math.pow(xSpeeds[0],2)+Math.pow(ySpeeds[0],2)),Math.atan2(xSpeeds[0],ySpeeds[0]));
     playerJ.collisionHandler(Math.sqrt(Math.pow(xSpeeds[1],2)+Math.pow(ySpeeds[1],2)),Math.atan2(xSpeeds[1],ySpeeds[1]));
   }
-  
+
 }
 
 function oneDimensionCollision(speedI,massI,speedJ,massJ){

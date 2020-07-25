@@ -8,7 +8,7 @@ class Object {
   }
 
   update(dt) {
-    
+
     this.x += dt * this.speed * Math.sin(this.direction);
     this.y -= dt * this.speed * Math.cos(this.direction);
   }
@@ -18,7 +18,12 @@ class Object {
     const dy = this.y - object.y;
     return Math.sqrt(dx * dx + dy * dy);
   }
-
+  setX(newX){
+    this.x = newX;
+  }
+  setY(newY){
+    this.y = newY;
+  }
   setDirection(dir) {
     this.direction = dir;
   }

@@ -7,7 +7,7 @@ class Part extends ObjectClass {
     this.parentID = parentID;
   }
 
-  // Returns true if the bullet should be destroyed
+  // Returns true if the obj should be destroyed
   update(dt) {
     super.update(dt);
     return this.x < 0 || this.x > Constants.MAP_SIZE || this.y < 0 || this.y > Constants.MAP_SIZE;
