@@ -76,7 +76,6 @@ class Player extends ObjectClass {
     this.originalSpeed = this.speed;
     this.originalDir = this.direction;
     this.setSpeed(0);
-    //this.setDirection(dir);
   }
   lostControlHandler(){
     var progress = (Date.now() - this.lostControlStartTime)/Constants.PLAYER_LOST_CONTROL_DURATION;

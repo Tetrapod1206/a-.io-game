@@ -27,7 +27,8 @@ class Game {
     }
   }
   randGenParts(){
-    if(Date.now() - this.randGenTimestamp > Constants.PART_GEN_CD && this.parts.length <= Constants.PART_AMOUNT_MAX){
+    var regenRatio = 10*(1- (Math.abs(Constants.PART_AMOUNT_MAX - this.parts.length)/Constants.PART_AMOUNT_MAX));
+    if(Date.now() - this.randGenTimestamp > Constants.PART_GEN_CD*regenRatio && this.parts.length <= Constants.PART_AMOUNT_MAX){
       this.randGenTimestamp = Date.now();
       var generatedPart = new Part("generator",Math.floor(Math.random()*2900)+50 , Math.floor(Math.random()*2900)+50, 0);
       this.parts.push(generatedPart);
