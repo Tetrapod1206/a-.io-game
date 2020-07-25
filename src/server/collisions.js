@@ -21,4 +21,20 @@ function applyCollisions(players, bullets) {
   return destroyedBullets;
 }
 
+function applyPlayerCollisions(players){
+  for(let i = 0; i < players.length ; i++){
+    for (let j = 0; j < players.length; j++) {
+      const playerI = players[i];
+      const playerJ = players[j];
+      if (
+        playerI.distanceTo(playerJ) <= playerI.size + playerJ.size
+      ) {
+        console.log("contact!");
+        console.log(playerI);
+        console.log(playerJ);
+      }
+    }
+  }
+}
+
 module.exports = applyCollisions;
