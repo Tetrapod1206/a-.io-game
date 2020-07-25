@@ -2,6 +2,7 @@ const ASSET_NAMES = [
   'car.svg',
   'part.svg',
   'car_new.svg',
+  'block.svg',
 ];
 
 const assets = {};

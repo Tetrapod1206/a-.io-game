@@ -11,6 +11,7 @@ class Game {
     this.sockets = {};
     this.players = {};
     this.parts = [];
+    this.blocks = [];
     this.lastUpdateTime = Date.now();
     this.shouldSendUpdate = false;
     this.randGenTimestamp = Date.now();
@@ -93,13 +94,9 @@ class Game {
 
     // Apply collisions, give players score for hitting parts
     applyPlayerCollisions(Object.values(this.players));
-    const destroyedBullets = applyCollisions(Object.values(this.players), this.parts);
-    destroyedBullets.forEach(b => {
-      if (this.players[b.parentID]) {
-        this.players[b.parentID].onSuckNewPart();
-      }
-    });
-    this.parts = this.parts.filter(part => !destroyedBullets.includes(part));
+    const destroyedParts = applyCollisions(Object.values(this.players), this.parts);
+
+    this.parts = this.parts.filter(part => !destroyedParts.includes(part));
 
     // Check if any players are dead
     Object.keys(this.sockets).forEach(playerID => {
