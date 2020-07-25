@@ -37,4 +37,8 @@ function applyPlayerCollisions(players){
   }
 }
 
+function oneDimensionCollision(speedI,massI,speedJ,massJ){
+  
+}
+
 module.exports = {applyCollisions,applyPlayerCollisions};

@@ -11,8 +11,11 @@ class Player extends ObjectClass {
     this.boostCooldown = 0;
     this.score = this.size - Constants.PLAYER_INIT_SIZE;
     this.boostStartTime = 0;
+    this.lostControlStartTime = 0;
     this.originalSpeed = 0;
+    this.originalDir = 0;
     this.isDuringBoost = false;
+    this.isDuringLostControl = false;
   }
 
   // Returns a newly created bullet, or null.
@@ -51,10 +54,31 @@ class Player extends ObjectClass {
         this.boostStartTime = 0;
         this.isDuringBoost = false;
         for(var i = this.originalSpeed*Constants.PLAYER_BOOST_RATIO;i>this.originalSpeed;i--){
-          this.setSpeed(this.originalSpeed);
+          this.setSpeed(i);
         }
       }
     }
+  }
+  collisionHandler(speed,dir){
+    this.isDuringBoost = true;
+    this.lostControlStartTime = Date.now();
+    this.originalSpeed = this.speed;
+    this.originalDir = this.direction;
+    this.setSpeed(speed);
+    this.setDirection(dir);
+  }
+  lostControlHandler(){
+    if(this.isDuringLostControl){
+      if(Date.now() - this.lostControlStartTime > Constants.PLAYER_LOST_CONTROL_DURATION){
+        this.lostControlStartTime = 0;
+        this.isDuringLostControl = false;
+        for(var i = this.originalSpeed*Constants.PLAYER_BOOST_RATIO;i>this.originalSpeed;i--){
+          this.setSpeed(i);
+        }
+        this.setDirection(this.originalDir);
+      }
+    }
+
   }
   serializeForUpdate() {
     var leftPercent = 0;
