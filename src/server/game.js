@@ -49,6 +49,9 @@ class Game {
 
   handleInput(socket, dir) {
     if (this.players[socket.id]) {
+      if(this.players[socket.id].isDuringLostControl){
+        dir = this.players[socket.id].direction;
+      }
       this.players[socket.id].setDirection(dir);
     }
   }
