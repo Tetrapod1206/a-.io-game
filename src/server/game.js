@@ -2,7 +2,9 @@ const Constants = require('../shared/constants');
 const shortid = require('shortid');
 const Player = require('./player');
 const Part = require('./part');
-const applyCollisions = require('./collisions');
+const Collisions = require('./collisions');
+const applyCollisions = Collisions.applyCollisions;
+const applyPlayerCollisions = Collisions.applyPlayerCollisions;
 
 class Game {
   constructor() {
@@ -90,6 +92,7 @@ class Game {
     });
 
     // Apply collisions, give players score for hitting parts
+    applyPlayerCollisions(Object.values(this.players));
     const destroyedBullets = applyCollisions(Object.values(this.players), this.parts);
     destroyedBullets.forEach(b => {
       if (this.players[b.parentID]) {

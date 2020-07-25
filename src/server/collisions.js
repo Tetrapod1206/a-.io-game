@@ -23,7 +23,7 @@ function applyCollisions(players, bullets) {
 
 function applyPlayerCollisions(players){
   for(let i = 0; i < players.length ; i++){
-    for (let j = 0; j < players.length; j++) {
+    for (let j = i+1; j < players.length; j++) {
       const playerI = players[i];
       const playerJ = players[j];
       if (
@@ -37,4 +37,4 @@ function applyPlayerCollisions(players){
   }
 }
 
-module.exports = applyCollisions;
+module.exports = {applyCollisions,applyPlayerCollisions};
