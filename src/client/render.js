@@ -49,6 +49,7 @@ function render() {
   else if(targetCanvasRatio < currentCanvasRatio - Constants.CANVAS_ENLARGE_SPEED){
     setCanvasDimensions(currentCanvasRatio - Constants.CANVAS_ENLARGE_SPEED);
   }
+
   // Draw background
   renderBackground(me.x, me.y);
 
@@ -76,8 +77,8 @@ function renderBackground(x,y){
     }
     context.fill();
     context.closePath();
-}
-*/
+}*/
+
 
 function renderBackground(x, y) {
   const backgroundX = MAP_SIZE / 2 - x + canvas.width / 2;
