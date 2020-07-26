@@ -11,17 +11,29 @@ const { PLAYER_RADIUS, PLAYER_MAX_HP, BULLET_RADIUS, MAP_SIZE } = Constants;
 // Get the canvas graphics context
 const canvas = document.getElementById('game-canvas');
 const context = canvas.getContext('2d');
-setCanvasDimensions();
+var targetCanvasRatio = 0;
+var currentCanvasRatio = 0;
+initCanvasDimensions();
 
-function setCanvasDimensions() {
+function initCanvasDimensions() {
   // On small screens (e.g. phones), we want to "zoom out" so players can still see at least
   // 800 in-game units of width.
-  const scaleRatio = Math.max(1, 800 / window.innerWidth);
+  var scaleRatio = Math.max(1, 800 / window.innerWidth);
+  targetCanvasRatio = scaleRatio;
+  currentCanvasRatio = scaleRatio;
+  console.log(scaleRatio);
   canvas.width = scaleRatio * window.innerWidth;
   canvas.height = scaleRatio * window.innerHeight;
 }
 
-window.addEventListener('resize', debounce(40, setCanvasDimensions));
+function setCanvasDimensions(scaleRatio){
+  currentCanvasRatio = scaleRatio;
+  console.log(scaleRatio);
+  canvas.width = scaleRatio * window.innerWidth;
+  canvas.height = scaleRatio * window.innerHeight;
+}
+
+window.addEventListener('resize', debounce(40, initCanvasDimensions));
 
 function render() {
   const { me, others, parts } = getCurrentState();
@@ -29,6 +41,14 @@ function render() {
     return;
   }
 
+  //resize accroding to player size
+  targetCanvasRatio = Math.max(1, (800+1000*(Math.floor(me.size/Constants.CANVAS_ENLARGE_SIZE)))/window.innerWidth);
+  if(targetCanvasRatio > currentCanvasRatio + Constants.CANVAS_ENLARGE_SPEED){
+    setCanvasDimensions(currentCanvasRatio + Constants.CANVAS_ENLARGE_SPEED);
+  }
+  else if(targetCanvasRatio < currentCanvasRatio - Constants.CANVAS_ENLARGE_SPEED){
+    setCanvasDimensions(currentCanvasRatio - Constants.CANVAS_ENLARGE_SPEED);
+  }
   // Draw background
   renderBackground(me.x, me.y);
 
