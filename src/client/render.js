@@ -78,7 +78,8 @@ function renderBackground(x, y) {
 
 // Renders a ship at the given coordinates
 function renderPlayer(me, player) {
-  const { x, y, direction,size,leftBoost} = player;
+  const { x, y, username, direction,size,leftBoost} = player;
+  var dispName = username.slice(0, username.length-3);
   const canvasX = canvas.width / 2 + x - me.x;
   const canvasY = canvas.height / 2 + y - me.y;
   // Draw ship
@@ -94,20 +95,23 @@ function renderPlayer(me, player) {
   );
   context.restore();
   // Draw boost duration bar.
+  context.fillStyle = 'black';
+  context.font = "16px Arial";
+  context.fillText(dispName, canvasX-4*(dispName.length), canvasY - size - 16);
   if(leftBoost != 0){
     context.fillStyle = 'grey';
     context.fillRect(
       canvasX - size,
-      canvasY - size - 4,
+      canvasY + size + 16,
       size*2,
-      2,
+      4,
     );
     context.fillStyle = 'white';
     context.fillRect(
       canvasX - size,
-      canvasY - size - 4,
+      canvasY + size + 16,
       size*2  * leftBoost/100,
-      2,
+      4,
     );
   }
 }

@@ -6,7 +6,12 @@ const Constants = require('../shared/constants');
 class Player extends ObjectClass {
   constructor(id, username, x, y) {
     super(id, x, y, Math.random() * 2 * Math.PI, Constants.PLAYER_INIT_SPEED);
-    this.username = username;
+    if(username){
+      this.username = username;
+    }
+    else{
+      this.username = "Annoymous";
+    }
     this.size = Constants.PLAYER_INIT_SIZE;
     this.boostCooldown = 0;
     this.score = this.size - Constants.PLAYER_INIT_SIZE;
@@ -105,7 +110,7 @@ class Player extends ObjectClass {
         }
         else{
 
-          this.setDirection(this.direction+ (1-progress)*0.5);
+          this.setDirection(this.direction+ (1-progress)*0.3);
         }
       }
     }
@@ -118,9 +123,9 @@ class Player extends ObjectClass {
     else{
       leftPercent = 0;
     }
-
     return {
       ...(super.serializeForUpdate()),
+      username: this.username,
       direction: this.direction,
       size: this.size,
       leftBoost: leftPercent,
