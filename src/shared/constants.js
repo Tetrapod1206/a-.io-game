@@ -19,6 +19,9 @@ module.exports = Object.freeze({
   PART_GEN_CD: 500,
   PART_AMOUNT_MAX: 60,
 
+  CANVAS_ENLARGE_SIZE: 120,
+  CANVAS_ENLARGE_SPEED: 0.005,
+
   MAP_SIZE: 3000,
   MSG_TYPES: {
     JOIN_GAME: 'join_game',
