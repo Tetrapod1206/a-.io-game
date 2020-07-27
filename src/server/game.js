@@ -15,6 +15,7 @@ class Game {
     this.lastUpdateTime = Date.now();
     this.shouldSendUpdate = false;
     this.randGenTimestamp = Date.now();
+    this.lastDropTimestamp = Date.now();
     setInterval(this.update.bind(this), 1000 / 60);
     this.initParts();
   }
@@ -22,7 +23,7 @@ class Game {
   initParts(){
     var randAmount = Math.floor(Math.random()*30)+30;
     for(var i = 0; i<randAmount; i++){
-      var generatedPart = new Part("init",Math.floor(Math.random()*2900)+50 , Math.floor(Math.random()*2900)+50, 0,Math.floor(Math.random()*2)+1);
+      var generatedPart = new Part("init",Math.floor(Math.random()*2900)+50 , Math.floor(Math.random()*2900)+50, 0,Math.floor(Math.random()*(Constants.MAX_PART_RATIO-1))+1);
       this.parts.push(generatedPart);
     }
   }
@@ -30,7 +31,7 @@ class Game {
     var regenRatio = 5*(1- (Math.abs(Constants.PART_AMOUNT_MAX - this.parts.length)/Constants.PART_AMOUNT_MAX));
     if(Date.now() - this.randGenTimestamp > Constants.PART_GEN_CD*regenRatio && this.parts.length <= Constants.PART_AMOUNT_MAX){
       this.randGenTimestamp = Date.now();
-      var generatedPart = new Part("generator",Math.floor(Math.random()*2900)+50 , Math.floor(Math.random()*2900)+50, 0,Math.floor(Math.random()*2)+1);
+      var generatedPart = new Part("generator",Math.floor(Math.random()*2900)+50 , Math.floor(Math.random()*2900)+50, 0,Math.floor(Math.random()*(Constants.MAX_PART_RATIO-1))+1);
       this.parts.push(generatedPart);
     }
   }
@@ -64,18 +65,20 @@ class Game {
       var tempDir = player.direction;
       var boostCheck = this.players[socket.id].toggleBoost();
       if(boostCheck){
-        const newPart = new Part(player.id, tempX+(Constants.BULLET_RADIUS+player.size+20)*Math.sin(tempDir+Math.PI), tempY+(Constants.BULLET_RADIUS+player.size+20)*Math.cos(tempDir+Math.PI), player.direction,Constants.DROP_DECREASE);
-        console.log(newPart);
-        console.log(player);
+        const newPart = new Part(player.id, tempX+(Constants.BULLET_RADIUS+player.size+20)*Math.sin(tempDir+Math.PI), tempY-(Constants.BULLET_RADIUS+player.size+20)*Math.cos(tempDir+Math.PI), player.direction,Math.floor(Math.random()*(Constants.MAX_PART_RATIO-1))+1);
         this.parts.push(newPart);
       }
     }
   }
-  handleCrash(player){
-    const newPart = new Part(player.id, player.x+(Constants.BULLET_RADIUS+player.size+20)*Math.sin(player.direction+Math.PI), player.y+(Constants.BULLET_RADIUS+player.size+20)*Math.cos(player.direction+Math.PI), player.direction,Constants.DROP_DECREASE);
+  handleCrashDrop(player){
+    if(Date.now() - player.lastDropTimestamp > 5){
+      player.lastDropTimestamp = Date.now();
+      var dropAmount = Math.floor(Math.random()*(Constants.MAX_PART_RATIO-1))+1;
+      const newPart = new Part(player.id, player.x+(Constants.BULLET_RADIUS+player.size+10)*Math.sin(player.direction+Math.PI), player.y+(Constants.BULLET_RADIUS+player.size+20)*Math.cos(player.direction+Math.PI), player.direction,dropAmount);
     console.log(newPart);
     this.parts.push(newPart);
-    player.size -= 3;
+    player.size -= dropAmount;
+  }
   }
 
   update() {
@@ -106,8 +109,8 @@ class Game {
     var res = applyPlayerCollisions(Object.values(this.players));
     var isColl = res[0];
     if(isColl){
-      this.handleCrash(res[1]);
-      this.handleCrash(res[2]);
+      this.handleCrashDrop(res[1]);
+      this.handleCrashDrop(res[2]);
     }
     const destroyedParts = applyCollisions(Object.values(this.players), this.parts);
 

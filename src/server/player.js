@@ -17,6 +17,7 @@ class Player extends ObjectClass {
     this.score = this.size - Constants.PLAYER_INIT_SIZE;
     this.boostStartTime = 0;
     this.lostControlStartTime = 0;
+    this.lastDropTimestamp = 0;
     this.vxdt = 0;
     this.vydt = 0;
     this.dt = 0;
@@ -56,7 +57,7 @@ class Player extends ObjectClass {
     if(!this.isDuringBoost){
       this.isDuringBoost = true;
       this.boostStartTime = Date.now();
-      this.setSpeed(this.speed + this.size/Constants.PLAYER_INIT_SIZE *Constants.PLAYER_BOOST_RATIO);
+      this.setSpeed(this.speed + Constants.PLAYER_INIT_SIZE/this.size *Constants.PLAYER_BOOST_RATIO);
       this.size -= Constants.DROP_DECREASE;
       return true;
     }
@@ -76,8 +77,6 @@ class Player extends ObjectClass {
   collisionHandler(speed,dir){
     this.vxdt = speed*Math.sin(dir);
     this.vydt = speed*Math.cos(dir);
-    console.log(this.vxdt);
-    console.log(this.vydt);
     this.isDuringLostControl = true;
     this.isDuringBoost = false;
     this.lostControlStartTime = Date.now();

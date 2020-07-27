@@ -18,6 +18,24 @@ function onKeyInput(e){
   }
 }
 
+var mylatesttap;
+function doubleTap(e) {
+
+   var now = new Date().getTime();
+   var timesince = now - mylatesttap;
+   if((timesince < 600) && (timesince > 0)){
+
+    triggerBoost();
+
+   }
+   else{
+      onTouchInput(e);
+  }
+
+   mylatesttap = new Date().getTime();
+
+}
+
 function handleInput(x, y) {
   const dir = Math.atan2(x - window.innerWidth / 2, window.innerHeight / 2 - y);
   updateDirection(dir);
@@ -26,7 +44,7 @@ function handleInput(x, y) {
 export function startCapturingInput() {
   window.addEventListener('mousemove', onMouseInput);
   window.addEventListener('click', onMouseInput);
-  window.addEventListener('touchstart', onTouchInput);
+  window.addEventListener('touchstart', doubleTap);
   window.addEventListener('touchmove', onTouchInput);
   window.addEventListener('keypress', onKeyInput);
 }
@@ -34,7 +52,7 @@ export function startCapturingInput() {
 export function stopCapturingInput() {
   window.removeEventListener('mousemove', onMouseInput);
   window.removeEventListener('click', onMouseInput);
-  window.removeEventListener('touchstart', onTouchInput);
+  window.removeEventListener('touchstart', doubleTap);
   window.removeEventListener('touchmove', onTouchInput);
   window.removeEventListener('keypress', onKeyInput);
 }
