@@ -22,6 +22,7 @@ function applyCollisions(players, bullets) {
 }
 
 function applyPlayerCollisions(players){
+  var collisionList = [];
   for(let i = 0; i < players.length ; i++){
     for (let j = i+1; j < players.length; j++) {
       const playerI = players[i];
@@ -30,12 +31,11 @@ function applyPlayerCollisions(players){
         playerI.distanceTo(playerJ) <= playerI.size + playerJ.size
       ) {
         collisionComp(playerI,playerJ);
-        return [true,playerI,playerJ];
+        collisionList[collisionList.length] = [true,playerI,playerJ]
       }
-
     }
   }
-  return [false,null,null];
+  return collisionList;
 }
 
 function collisionComp(playerI , playerJ){
