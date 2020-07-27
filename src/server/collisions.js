@@ -1,4 +1,5 @@
 const Constants = require('../shared/constants');
+const Game = require('./game');
 
 // Returns an array of bullets to be destroyed.
 function applyCollisions(players, bullets) {
@@ -10,9 +11,9 @@ function applyCollisions(players, bullets) {
       const part = bullets[i];
       const player = players[j];
       if (
-        player.distanceTo(part) <= player.size + Constants.BULLET_RADIUS - player.size/4) {
+        player.distanceTo(part) <= player.size + Constants.BULLET_RADIUS*part.size*0.5 - player.size/4) {
         destroyedBullets.push(part);
-        player.onSuckNewPart();
+        player.onSuckNewPart(part);
         break;
       }
     }
@@ -29,10 +30,12 @@ function applyPlayerCollisions(players){
         playerI.distanceTo(playerJ) <= playerI.size + playerJ.size
       ) {
         collisionComp(playerI,playerJ);
-
+        return [true,playerI,playerJ];
       }
+
     }
   }
+  return [false,null,null];
 }
 
 function collisionComp(playerI , playerJ){

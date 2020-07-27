@@ -30,6 +30,9 @@ class Player extends ObjectClass {
   // Returns a newly created bullet, or null.
   update(delta) {
     this.dt = delta;
+    if(!this.isDuringBoost && !this.isDuringLostControl){
+      this.speed = Constants.PLAYER_INIT_SPEED - this.size;
+    }
     super.update(delta);
     this.boostHandler();
     this.lostControlHandler();
@@ -46,14 +49,14 @@ class Player extends ObjectClass {
     this.size -= Constants.HIT_DAMAGE;
   }
 
-  onSuckNewPart() {
-    this.size += Constants.SUCK_ADDITION;
+  onSuckNewPart(part) {
+    this.size += Constants.SUCK_ADDITION*part.size;
   }
   toggleBoost(){
     if(!this.isDuringBoost){
       this.isDuringBoost = true;
       this.boostStartTime = Date.now();
-      this.setSpeed(this.speed * Constants.PLAYER_BOOST_RATIO);
+      this.setSpeed(this.speed + this.size/Constants.PLAYER_INIT_SIZE *Constants.PLAYER_BOOST_RATIO);
       this.size -= Constants.DROP_DECREASE;
       return true;
     }

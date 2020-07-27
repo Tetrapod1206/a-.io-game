@@ -22,15 +22,15 @@ class Game {
   initParts(){
     var randAmount = Math.floor(Math.random()*30)+30;
     for(var i = 0; i<randAmount; i++){
-      var generatedPart = new Part("init",Math.floor(Math.random()*2900)+50 , Math.floor(Math.random()*2900)+50, 0);
+      var generatedPart = new Part("init",Math.floor(Math.random()*2900)+50 , Math.floor(Math.random()*2900)+50, 0,Math.floor(Math.random()*2)+1);
       this.parts.push(generatedPart);
     }
   }
   randGenParts(){
-    var regenRatio = 10*(1- (Math.abs(Constants.PART_AMOUNT_MAX - this.parts.length)/Constants.PART_AMOUNT_MAX));
+    var regenRatio = 5*(1- (Math.abs(Constants.PART_AMOUNT_MAX - this.parts.length)/Constants.PART_AMOUNT_MAX));
     if(Date.now() - this.randGenTimestamp > Constants.PART_GEN_CD*regenRatio && this.parts.length <= Constants.PART_AMOUNT_MAX){
       this.randGenTimestamp = Date.now();
-      var generatedPart = new Part("generator",Math.floor(Math.random()*2900)+50 , Math.floor(Math.random()*2900)+50, 0);
+      var generatedPart = new Part("generator",Math.floor(Math.random()*2900)+50 , Math.floor(Math.random()*2900)+50, 0,Math.floor(Math.random()*2)+1);
       this.parts.push(generatedPart);
     }
   }
@@ -64,12 +64,18 @@ class Game {
       var tempDir = player.direction;
       var boostCheck = this.players[socket.id].toggleBoost();
       if(boostCheck){
-        const newPart = new Part(player.id, tempX+(Constants.BULLET_RADIUS+player.size+20)*Math.sin(tempDir+Math.PI), tempY+(Constants.BULLET_RADIUS+player.size+20)*Math.cos(tempDir+Math.PI), player.direction);
+        const newPart = new Part(player.id, tempX+(Constants.BULLET_RADIUS+player.size+20)*Math.sin(tempDir+Math.PI), tempY+(Constants.BULLET_RADIUS+player.size+20)*Math.cos(tempDir+Math.PI), player.direction,Constants.DROP_DECREASE);
         console.log(newPart);
         console.log(player);
         this.parts.push(newPart);
       }
     }
+  }
+  handleCrash(player){
+    const newPart = new Part(player.id, player.x+(Constants.BULLET_RADIUS+player.size+20)*Math.sin(player.direction+Math.PI), player.y+(Constants.BULLET_RADIUS+player.size+20)*Math.cos(player.direction+Math.PI), player.direction,Constants.DROP_DECREASE);
+    console.log(newPart);
+    this.parts.push(newPart);
+    player.size -= 3;
   }
 
   update() {
@@ -97,7 +103,12 @@ class Game {
     });
 
     // Apply collisions, give players score for hitting parts
-    applyPlayerCollisions(Object.values(this.players));
+    var res = applyPlayerCollisions(Object.values(this.players));
+    var isColl = res[0];
+    if(isColl){
+      this.handleCrash(res[1]);
+      this.handleCrash(res[2]);
+    }
     const destroyedParts = applyCollisions(Object.values(this.players), this.parts);
 
     this.parts = this.parts.filter(part => !destroyedParts.includes(part));
@@ -106,7 +117,7 @@ class Game {
     Object.keys(this.sockets).forEach(playerID => {
       const socket = this.sockets[playerID];
       const player = this.players[playerID];
-      if (player.hp <= 0) {
+      if (player.size <= 0) {
         socket.emit(Constants.MSG_TYPES.GAME_OVER);
         this.removePlayer(socket);
       }
