@@ -39,13 +39,10 @@ function applyPlayerCollisions(players){
 }
 
 function collisionComp(playerI , playerJ){
-  if(playerI.isDuringLostControl == false || playerJ.isDuringLostControl == false){
     xSpeeds = oneDimensionCollision(playerI.speed * Math.sin(playerI.direction) , playerI.mass , playerJ.speed * Math.sin(playerJ.direction) , playerJ.mass );
     ySpeeds = oneDimensionCollision(playerI.speed * Math.cos(playerI.direction) , playerI.mass , playerJ.speed * Math.cos(playerJ.direction) , playerJ.mass );
     playerI.collisionHandler(Math.sqrt(Math.pow(xSpeeds[0],2)+Math.pow(ySpeeds[0],2)),Math.atan2(xSpeeds[0],ySpeeds[0]));
     playerJ.collisionHandler(Math.sqrt(Math.pow(xSpeeds[1],2)+Math.pow(ySpeeds[1],2)),Math.atan2(xSpeeds[1],ySpeeds[1]));
-  }
-
 }
 
 function oneDimensionCollision(speedI,massI,speedJ,massJ){

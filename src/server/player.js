@@ -25,7 +25,7 @@ class Player extends ObjectClass {
     this.originalDir = 0;
     this.isDuringBoost = false;
     this.isDuringLostControl = false;
-    this.mass = this.size;
+    this.mass = Math.pow(this.size,2);
   }
 
   // Returns a newly created bullet, or null.
@@ -39,7 +39,7 @@ class Player extends ObjectClass {
     this.lostControlHandler();
     // Update score
     this.size = this.score + Constants.PLAYER_INIT_SIZE;
-    this.mass = this.size;
+    this.mass = Math.pow(this.size,2);
 
     // Make sure the player stays in bounds
     this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x));
@@ -81,7 +81,7 @@ class Player extends ObjectClass {
     this.isDuringBoost = false;
     this.lostControlStartTime = Date.now();
     this.originalDir = this.direction;
-    this.setSpeed(0);
+    this.setSpeed(50);
   }
   lostControlHandler(){
     var progress = (Date.now() - this.lostControlStartTime)/Constants.PLAYER_LOST_CONTROL_DURATION;

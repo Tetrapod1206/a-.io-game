@@ -71,14 +71,15 @@ class Game {
     }
   }
   handleCrashDrop(player){
-    if(Date.now() - player.lastDropTimestamp > 2000  && player.score > 0){
+    if(Date.now() - player.lastDropTimestamp > 2000  && player.score >= 0){
       player.lastDropTimestamp = Date.now();
       var dropAmount = Math.floor(Math.random()*(Constants.MAX_PART_RATIO-1))+1;
-      const newPart = new Part(player.id, player.x+(Constants.BULLET_RADIUS+player.size+10)*Math.sin(player.direction+Math.PI), player.y+(Constants.BULLET_RADIUS+player.size+20)*Math.cos(player.direction+Math.PI), player.direction,dropAmount);
+      const newPart = new Part(player.id, player.x+(Constants.BULLET_RADIUS+player.size+100)*Math.sin(player.direction+Math.PI), player.y+(Constants.BULLET_RADIUS+player.size+100)*Math.cos(player.direction+Math.PI), player.direction,dropAmount);
       if(player.score > 0){
         this.parts.push(newPart);
-        if(player.score - dropAmount<0){
-          this.removePlayer(player);
+        if(player.score - dropAmount < 0){
+          player.score -= dropAmount;
+          //this.removePlayer(player);
         }else{
           player.score -= dropAmount;
         }
