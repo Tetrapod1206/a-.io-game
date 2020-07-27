@@ -13,12 +13,13 @@ const canvas = document.getElementById('game-canvas');
 const context = canvas.getContext('2d');
 var targetCanvasRatio = 0;
 var currentCanvasRatio = 0;
+var scaleRatio = 0;
 initCanvasDimensions();
 
 function initCanvasDimensions() {
   // On small screens (e.g. phones), we want to "zoom out" so players can still see at least
   // 800 in-game units of width.
-  var scaleRatio = Math.max(1, 800 / window.innerWidth);
+  scaleRatio = Math.max(1, 800 / window.innerWidth);
   targetCanvasRatio = scaleRatio;
   currentCanvasRatio = scaleRatio;
   console.log(scaleRatio);
@@ -64,20 +65,9 @@ function render() {
   // Draw all players
   renderPlayer(me, me);
   others.forEach(renderPlayer.bind(null, me));
+  others.forEach(renderArrow.bind(null, me));
 }
-/*
-function renderBackground(x,y){
-    context.fillStyle = "white";
-    context.backgroundColor = 'grey';
-    context.beginPath();
-    for (var x = 0, i = 0; i < 150; x+=21, i++) {
-        for (var y = 0, j=0; j < 150; y+=21, j++) {
-            context.rect (x, y, 20, 20);
-        }
-    }
-    context.fill();
-    context.closePath();
-}*/
+
 
 
 function renderBackground(x, y) {
@@ -97,6 +87,53 @@ function renderBackground(x, y) {
   context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
+function renderArrow(me, player){
+  const { x, y} = player;
+  const canvasX = canvas.width / 2 + x - me.x;
+  const canvasY = canvas.height / 2 + y - me.y;
+    context.translate(0,0);
+    if(me.y > player.y && me.y - player.y > canvas.height / 2){
+      context.drawImage(
+      getAsset('arrow_up.svg'),
+      -(me.x - player.x)/(scaleRatio*5) + canvasX ,
+      10,
+      20,
+      20,
+    );
+    }
+    if(me.y < player.y && player.y - me.y > canvas.height / 2){
+      context.save();
+      context.drawImage(
+      getAsset('arrow_down.svg'),
+      -(player.x- me.x)/(scaleRatio*5) + canvasX ,
+      canvas.height - 30,
+      20,
+      20,
+    );
+    }
+    if(me.x > player.x && me.x - player.x > canvas.width / 2){
+      context.save();
+      context.drawImage(
+      getAsset('arrow_left.svg'),
+      10,
+      -(me.y- player.y)/(scaleRatio*5) + canvasY,
+      20,
+      20,
+    );
+    }
+    if(me.x < player.x && player.x - me.x > canvas.width / 2){
+      context.save();
+      context.drawImage(
+      getAsset('arrow_right.svg'),
+      canvas.width -30,
+      -(player.y- me.y)/(scaleRatio*5) + canvasY,
+      20,
+      20,
+    );
+    }
+
+  context.restore();
+}
 // Renders a ship at the given coordinates
 function renderPlayer(me, player) {
   const { x, y, username, direction,size,leftBoost} = player;
@@ -115,6 +152,7 @@ function renderPlayer(me, player) {
     size*2,
   );
   context.restore();
+
   // Draw boost duration bar.
   context.fillStyle = 'black';
   context.font = "16px Arial";
@@ -139,7 +177,6 @@ function renderPlayer(me, player) {
 
 function renderPart(me, bullet) {
   const { x, y,size} = bullet;
-  console.log(size);
   context.drawImage(
     getAsset('part.svg'),
     canvas.width / 2 + x - me.x - BULLET_RADIUS*size*0.5,

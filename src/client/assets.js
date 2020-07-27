@@ -3,6 +3,10 @@ const ASSET_NAMES = [
   'part.svg',
   'car_new.svg',
   'block.svg',
+  'arrow_up.svg',
+  'arrow_down.svg',
+  'arrow_right.svg',
+  'arrow_left.svg',
 ];
 
 const assets = {};
