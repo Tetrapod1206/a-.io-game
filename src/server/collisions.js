@@ -11,7 +11,7 @@ function applyCollisions(players, bullets) {
       const part = bullets[i];
       const player = players[j];
       if (
-        player.distanceTo(part) <= player.size + Constants.BULLET_RADIUS*part.size*0.5) {
+        player.distanceTo(part) <= player.size + Constants.BULLET_RADIUS*part.size*0.5 && !player.isDuringLostControl) {
         destroyedBullets.push(part);
         player.onSuckNewPart(part);
         break;
@@ -30,8 +30,10 @@ function applyPlayerCollisions(players){
       if (
         playerI.distanceTo(playerJ) <= playerI.size + playerJ.size
       ) {
+        console.log(playerI.direction);
+        console.log(playerJ.direction);
         collisionComp(playerI,playerJ);
-        collisionList[collisionList.length] = [true,playerI,playerJ]
+        collisionList[collisionList.length] = [true,playerI,playerJ,]
       }
     }
   }
@@ -46,7 +48,6 @@ function collisionComp(playerI , playerJ){
 }
 
 function oneDimensionCollision(speedI,massI,speedJ,massJ){
-  console.log(massI);
   return [(speedI * (massI - massJ) + 2 * massJ * speedJ) / (massI + massJ) , (speedJ * (massJ - massI) + 2 * massI * speedI) / (massI + massJ)]
 }
 

@@ -51,7 +51,7 @@ class Player extends ObjectClass {
   }
 
   onSuckNewPart(part) {
-    this.score += Constants.SUCK_ADDITION*part.size;
+      this.score += Constants.SUCK_ADDITION*part.size;
   }
   toggleBoost(){
     if(!this.isDuringBoost){
@@ -81,7 +81,7 @@ class Player extends ObjectClass {
     this.isDuringBoost = false;
     this.lostControlStartTime = Date.now();
     this.originalDir = this.direction;
-    this.setSpeed(50);
+    //this.setSpeed(50);
   }
   lostControlHandler(){
     var progress = (Date.now() - this.lostControlStartTime)/Constants.PLAYER_LOST_CONTROL_DURATION;
@@ -111,7 +111,7 @@ class Player extends ObjectClass {
         }
         else{
 
-          this.setDirection(this.direction+ (1-progress)*0.3);
+          this.setDirection(this.direction+ (1-progress)*0.2);
         }
       }
     }
