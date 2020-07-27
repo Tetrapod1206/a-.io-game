@@ -58,7 +58,7 @@ class Game {
     }
   }
   handleBoost(socket){
-    if (this.players[socket.id] && this.players[socket.id].size >= (Constants.PLAYER_INIT_SIZE +Constants.DROP_DECREASE)) {
+    if (this.players[socket.id] && this.players[socket.id].score >= Constants.DROP_DECREASE) {
       var player = this.players[socket.id];
       var tempX = player.x;
       var tempY = player.y;
@@ -71,14 +71,20 @@ class Game {
     }
   }
   handleCrashDrop(player){
-    if(Date.now() - player.lastDropTimestamp > 5){
+    if(Date.now() - player.lastDropTimestamp > 2000  && player.score > 0){
       player.lastDropTimestamp = Date.now();
       var dropAmount = Math.floor(Math.random()*(Constants.MAX_PART_RATIO-1))+1;
       const newPart = new Part(player.id, player.x+(Constants.BULLET_RADIUS+player.size+10)*Math.sin(player.direction+Math.PI), player.y+(Constants.BULLET_RADIUS+player.size+20)*Math.cos(player.direction+Math.PI), player.direction,dropAmount);
-    console.log(newPart);
-    this.parts.push(newPart);
-    player.size -= dropAmount;
-  }
+      if(player.score > 0){
+        this.parts.push(newPart);
+        if(player.score - dropAmount<0){
+          this.removePlayer(player);
+        }else{
+          player.score -= dropAmount;
+        }
+
+      }
+    }
   }
 
   update() {
@@ -120,9 +126,10 @@ class Game {
     Object.keys(this.sockets).forEach(playerID => {
       const socket = this.sockets[playerID];
       const player = this.players[playerID];
-      if (player.size <= 0) {
+      if (player.score < 0) {
         socket.emit(Constants.MSG_TYPES.GAME_OVER);
         this.removePlayer(socket);
+        console.log('oof');
       }
     });
 

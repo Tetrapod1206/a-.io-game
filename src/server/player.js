@@ -14,10 +14,10 @@ class Player extends ObjectClass {
     }
     this.size = Constants.PLAYER_INIT_SIZE;
     this.boostCooldown = 0;
-    this.score = this.size - Constants.PLAYER_INIT_SIZE;
+    this.score = 0;
     this.boostStartTime = 0;
     this.lostControlStartTime = 0;
-    this.lastDropTimestamp = 0;
+    this.lastDropTimestamp = Date.now();
     this.vxdt = 0;
     this.vydt = 0;
     this.dt = 0;
@@ -38,7 +38,7 @@ class Player extends ObjectClass {
     this.boostHandler();
     this.lostControlHandler();
     // Update score
-    this.score = this.size - Constants.PLAYER_INIT_SIZE;
+    this.size = this.score + Constants.PLAYER_INIT_SIZE;
     this.mass = this.size;
 
     // Make sure the player stays in bounds
@@ -47,18 +47,18 @@ class Player extends ObjectClass {
   }
 
   getHitbyOthers() {
-    this.size -= Constants.HIT_DAMAGE;
+    this.score -= Constants.HIT_DAMAGE;
   }
 
   onSuckNewPart(part) {
-    this.size += Constants.SUCK_ADDITION*part.size;
+    this.score += Constants.SUCK_ADDITION*part.size;
   }
   toggleBoost(){
     if(!this.isDuringBoost){
       this.isDuringBoost = true;
       this.boostStartTime = Date.now();
       this.setSpeed(this.speed + Constants.PLAYER_INIT_SIZE/this.size *Constants.PLAYER_BOOST_RATIO);
-      this.size -= Constants.DROP_DECREASE;
+      this.score -= Constants.DROP_DECREASE;
       return true;
     }
     return false;
@@ -87,7 +87,6 @@ class Player extends ObjectClass {
     var progress = (Date.now() - this.lostControlStartTime)/Constants.PLAYER_LOST_CONTROL_DURATION;
     if(this.isDuringLostControl){
       if(Date.now() - this.lostControlStartTime >= Constants.PLAYER_LOST_CONTROL_DURATION){
-        console.log('lostEND');
         this.lostControlStartTime = 0;
         this.isDuringLostControl = false;
         if(this.speed <= this.originalSpeed){
