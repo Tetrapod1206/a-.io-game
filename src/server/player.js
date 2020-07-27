@@ -42,8 +42,8 @@ class Player extends ObjectClass {
     this.mass = Math.pow(this.size,2);
 
     // Make sure the player stays in bounds
-    this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x));
-    this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y));
+    this.x = Math.max(0+this.size, Math.min(Constants.MAP_SIZE-this.size, this.x));
+    this.y = Math.max(0+this.size, Math.min(Constants.MAP_SIZE-this.size, this.y));
   }
 
   getHitbyOthers() {
